@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;1,14..32,400&family=DM+Serif+Display&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .pt-safe { padding-top: env(safe-area-inset-top); }
+  .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
+  .pl-safe { padding-left: env(safe-area-inset-left); }
+  .pr-safe { padding-right: env(safe-area-inset-right); }
+}
+
+@layer base {
+
+  html, body {
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ── Light theme (default) ───────────────────────────────────────────────── */
+  :root {
+    --background: 210 20% 98%;
+    --foreground: 220 20% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 10%;
+
+    --primary: 199 85% 42%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 210 16% 94%;
+    --secondary-foreground: 220 20% 10%;
+
+    --muted: 210 16% 95%;
+    --muted-foreground: 220 10% 44%;
+
+    --accent: 245 68% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 16% 88%;
+    --input: 214 16% 88%;
+    --ring: 199 85% 42%;
+
+    --radius: 0.75rem;
+  }
+
+  /* ── Dark theme ──────────────────────────────────────────────────────────── */
+  .dark {
+    --background: 222 47% 5%;
+    --foreground: 213 28% 90%;
+
+    --card: 220 38% 8%;
+    --card-foreground: 213 28% 90%;
+
+    --popover: 220 38% 8%;
+    --popover-foreground: 213 28% 90%;
+
+    --primary: 199 89% 58%;
+    --primary-foreground: 222 47% 5%;
+
+    --secondary: 217 26% 13%;
+    --secondary-foreground: 213 28% 90%;
+
+    --muted: 217 26% 12%;
+    --muted-foreground: 215 16% 46%;
+
+    --accent: 245 70% 66%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 58%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 217 24% 15%;
+    --input: 217 24% 13%;
+    --ring: 199 89% 58%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Thin scrollbar */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { @apply bg-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/30; }
+}
+
+
+input[type="date"], input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 40px;
+  font-size: 16px; /* important for iOS zoom issues */
+  padding: 0 10px;
+  box-sizing: border-box;
+}
