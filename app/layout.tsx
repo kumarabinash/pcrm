@@ -14,13 +14,13 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Boilerplate',
-  description: 'Next.js boilerplate with auth, storage, and notifications',
+  title: 'Reach — Personal CRM',
+  description: 'Stay in touch with the people who matter',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Boilerplate',
+    title: 'Reach',
   },
 }
 
