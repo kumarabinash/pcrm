@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useRef } from 'react'
-import Link from 'next/link'
+// Navigation handled programmatically via router.push to avoid Safari's
+// native link-preview on long-press, which conflicts with our gesture handling.
 import { PullToRefreshWrapper } from '@/components/PullToRefreshWrapper'
 import { useRouter } from 'next/navigation'
 import { format, formatDistanceToNowStrict } from 'date-fns'
@@ -71,9 +72,8 @@ function ReminderRow({ item, priority }: { item: ReminderRow; priority: 'overdue
   }
 
   return (
-    <Link
-      href={`/people/${item.contactId}`}
-      className="flex items-center gap-3 px-4 py-3.5 border-b border-border/30 active:bg-muted/30 transition-colors"
+    <div
+      className="flex items-center gap-3 px-4 py-3.5 border-b border-border/30 active:bg-muted/30 transition-colors cursor-pointer"
     >
       <PriorityCircle priority={priority} />
       <div className="flex-1 min-w-0">
@@ -88,7 +88,7 @@ function ReminderRow({ item, priority }: { item: ReminderRow; priority: 'overdue
           </p>
         )}
       </div>
-    </Link>
+    </div>
   )
 }
 
@@ -96,10 +96,12 @@ function SwipeableRow({
   children,
   onSwipeComplete,
   onLongPress,
+  onTap,
 }: {
   children: React.ReactNode
   onSwipeComplete: () => void
   onLongPress: () => void
+  onTap: () => void
 }) {
   const rowRef = useRef<HTMLDivElement>(null)
   const startX = useRef(0)
@@ -163,7 +165,11 @@ function SwipeableRow({
 
     if (longPressFired.current) return
 
-    if (!isTracking.current) return
+    if (!isTracking.current) {
+      // No swipe detected — this was a clean tap
+      if (!directionDecided.current) onTap()
+      return
+    }
 
     if (currentX.current >= THRESHOLD) {
       if (rowRef.current) {
@@ -426,17 +432,17 @@ export function TodayList({ overdue, dueToday, thisWeek }: TodayListProps) {
         ) : (
           <div className="divide-y divide-border/30">
             {overdue.map((item) => (
-              <SwipeableRow key={item.reminder.id} onSwipeComplete={() => handleComplete(item)} onLongPress={() => handleLongPress(item)}>
+              <SwipeableRow key={item.reminder.id} onSwipeComplete={() => handleComplete(item)} onLongPress={() => handleLongPress(item)} onTap={() => router.push(`/people/${item.contactId}`)}>
                 <ReminderRow item={item} priority="overdue" />
               </SwipeableRow>
             ))}
             {dueToday.map((item) => (
-              <SwipeableRow key={item.reminder.id} onSwipeComplete={() => handleComplete(item)} onLongPress={() => handleLongPress(item)}>
+              <SwipeableRow key={item.reminder.id} onSwipeComplete={() => handleComplete(item)} onLongPress={() => handleLongPress(item)} onTap={() => router.push(`/people/${item.contactId}`)}>
                 <ReminderRow item={item} priority="today" />
               </SwipeableRow>
             ))}
             {thisWeek.map((item) => (
-              <SwipeableRow key={item.reminder.id} onSwipeComplete={() => handleComplete(item)} onLongPress={() => handleLongPress(item)}>
+              <SwipeableRow key={item.reminder.id} onSwipeComplete={() => handleComplete(item)} onLongPress={() => handleLongPress(item)} onTap={() => router.push(`/people/${item.contactId}`)}>
                 <ReminderRow item={item} priority="week" />
               </SwipeableRow>
             ))}
