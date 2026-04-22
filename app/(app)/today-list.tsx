@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { PullToRefreshWrapper } from '@/components/PullToRefreshWrapper'
 import { useRouter } from 'next/navigation'
-import { format, formatDistanceToNow } from 'date-fns'
+import { format, formatDistanceToNowStrict } from 'date-fns'
 
 interface ReminderRow {
   reminder: {
@@ -12,6 +12,7 @@ interface ReminderRow {
     title: string | null
     type: string
     time: string | null
+    frequencyDays: number | null
   }
   contactName: string
   contactId: string
@@ -23,28 +24,60 @@ interface TodayListProps {
   thisWeek: ReminderRow[]
 }
 
-function priorityDot(type: 'overdue' | 'today' | 'week') {
-  const colors = { overdue: 'bg-red-500', today: 'bg-amber-500', week: 'bg-green-500' }
-  return <div className={`w-2.5 h-2.5 rounded-full ${colors[type]} shrink-0`} />
+function StatusPill({ priority, dueDate }: { priority: 'overdue' | 'today' | 'week'; dueDate: Date }) {
+  const config = {
+    overdue: { bg: 'bg-red-500/15', text: 'text-red-500', label: `${formatDistanceToNowStrict(dueDate)} overdue` },
+    today: { bg: 'bg-amber-500/15', text: 'text-amber-500', label: 'today' },
+    week: { bg: 'bg-green-500/15', text: 'text-green-500', label: format(dueDate, 'EEE') },
+  }
+  const c = config[priority]
+  return (
+    <span className={`text-[11px] px-2 py-0.5 rounded-full ${c.bg} ${c.text} shrink-0`}>
+      {c.label}
+    </span>
+  )
+}
+
+function PriorityCircle({ priority }: { priority: 'overdue' | 'today' | 'week' }) {
+  const colors = { overdue: 'border-red-500', today: 'border-amber-500', week: 'border-green-500' }
+  return <div className={`w-[22px] h-[22px] rounded-full border-2 ${colors[priority]} shrink-0`} />
 }
 
 function ReminderRow({ item, priority }: { item: ReminderRow; priority: 'overdue' | 'today' | 'week' }) {
-  const contextLine =
-    priority === 'overdue'
-      ? `${formatDistanceToNow(item.reminder.dueDate)} overdue`
-      : item.reminder.time
-        ? `${item.reminder.title ?? (item.reminder.type === 'recurring' ? 'Check in' : 'Reminder')} at ${item.reminder.time}`
-        : item.reminder.title ?? (item.reminder.type === 'recurring' ? 'Check in' : 'Reminder')
+  const titleText = item.reminder.title
+    ?? (item.reminder.type === 'recurring' ? 'Check in' : 'Reminder')
+  const titleWithTime = item.reminder.time
+    ? `${titleText} at ${item.reminder.time}`
+    : titleText
+
+  const metaParts: string[] = []
+  if (item.reminder.type === 'recurring' && item.reminder.frequencyDays) {
+    metaParts.push(`🔁 Every ${item.reminder.frequencyDays}d`)
+  }
+  if (priority !== 'today') {
+    metaParts.push(`📅 ${format(item.reminder.dueDate, 'MMM d')}`)
+  }
+  if (item.reminder.type === 'one-off') {
+    metaParts.push('One-off')
+  }
 
   return (
     <Link
       href={`/people/${item.contactId}`}
       className="flex items-center gap-3 px-4 py-3.5 border-b border-border/30 active:bg-muted/30 transition-colors"
     >
-      {priorityDot(priority)}
+      <PriorityCircle priority={priority} />
       <div className="flex-1 min-w-0">
-        <p className="text-[15px] font-semibold text-foreground truncate">{item.contactName}</p>
-        <p className="text-[13px] text-muted-foreground truncate">{contextLine}</p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[15px] font-semibold text-foreground truncate">{item.contactName}</p>
+          <StatusPill priority={priority} dueDate={item.reminder.dueDate} />
+        </div>
+        <p className="text-[13px] text-muted-foreground/80 mt-0.5 truncate">{titleWithTime}</p>
+        {metaParts.length > 0 && (
+          <p className="text-[12px] text-muted-foreground/60 mt-0.5 truncate">
+            {metaParts.join(' · ')}
+          </p>
+        )}
       </div>
     </Link>
   )
