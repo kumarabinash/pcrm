@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef } from 'react'
+import { useState, useRef, Fragment } from 'react'
 // Navigation handled programmatically via router.push to avoid Safari's
 // native link-preview on long-press, which conflicts with our gesture handling.
 import { PullToRefreshWrapper } from '@/components/PullToRefreshWrapper'
@@ -14,6 +14,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Calendar } from '@/components/ui/calendar'
+import { Check, Clock, SkipForward, Trash2, ArrowLeft, Repeat, CalendarDays } from 'lucide-react'
 
 interface ReminderRow {
   reminder: {
@@ -60,15 +61,25 @@ function ReminderRow({ item, priority }: { item: ReminderRow; priority: 'overdue
     ? `${titleText} at ${item.reminder.time}`
     : titleText
 
-  const metaParts: string[] = []
+  const metaItems: React.ReactNode[] = []
   if (item.reminder.type === 'recurring' && item.reminder.frequencyDays) {
-    metaParts.push(`🔁 Every ${item.reminder.frequencyDays}d`)
+    metaItems.push(
+      <span key="freq" className="inline-flex items-center gap-0.5">
+        <Repeat className="w-3 h-3" />
+        Every {item.reminder.frequencyDays}d
+      </span>
+    )
   }
   if (priority !== 'today') {
-    metaParts.push(`📅 ${format(item.reminder.dueDate, 'MMM d')}`)
+    metaItems.push(
+      <span key="date" className="inline-flex items-center gap-0.5">
+        <CalendarDays className="w-3 h-3" />
+        {format(item.reminder.dueDate, 'MMM d')}
+      </span>
+    )
   }
   if (item.reminder.type === 'one-off') {
-    metaParts.push('One-off')
+    metaItems.push(<span key="type">One-off</span>)
   }
 
   return (
@@ -82,10 +93,15 @@ function ReminderRow({ item, priority }: { item: ReminderRow; priority: 'overdue
           <StatusPill priority={priority} dueDate={item.reminder.dueDate} />
         </div>
         <p className="text-[13px] text-muted-foreground/80 mt-0.5 truncate">{titleWithTime}</p>
-        {metaParts.length > 0 && (
-          <p className="text-[12px] text-muted-foreground/60 mt-0.5 truncate">
-            {metaParts.join(' · ')}
-          </p>
+        {metaItems.length > 0 && (
+          <div className="flex items-center gap-1.5 text-[12px] text-muted-foreground/60 mt-0.5">
+            {metaItems.map((el, i) => (
+              <Fragment key={i}>
+                {i > 0 && <span>·</span>}
+                {el}
+              </Fragment>
+            ))}
+          </div>
         )}
       </div>
     </div>
@@ -195,13 +211,11 @@ function SwipeableRow({
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 bg-green-500 flex items-center pl-4">
-        <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-        </svg>
+        <Check className="w-6 h-6 text-white" strokeWidth={2.5} />
       </div>
       <div
         ref={rowRef}
-        className="relative bg-background"
+        className="relative bg-background select-none"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -287,7 +301,7 @@ function ReminderActionSheet({
   const in3Days = new Date()
   in3Days.setDate(in3Days.getDate() + 3)
 
-  const actionButtonClass = 'w-full text-left px-4 py-3.5 text-[15px] border-b border-border/30 active:bg-muted/30 transition-colors'
+  const actionButtonClass = 'w-full text-left px-4 py-3.5 text-[15px] border-b border-border/30 active:bg-muted/30 transition-colors flex items-center gap-3'
 
   return (
     <>
@@ -304,24 +318,24 @@ function ReminderActionSheet({
                 className={actionButtonClass}
                 onClick={() => { close(); onComplete(item) }}
               >
-                ✓ Complete
+                <Check className="w-5 h-5" /> Complete
               </button>
               <button
                 className={actionButtonClass}
                 onClick={() => setShowSnoozeOptions(true)}
               >
-                ⏰ Snooze
+                <Clock className="w-5 h-5" /> Snooze
               </button>
               {item.reminder.type === 'recurring' && (
                 <button className={actionButtonClass} onClick={handleSkip}>
-                  ⏭ Skip
+                  <SkipForward className="w-5 h-5" /> Skip
                 </button>
               )}
               <button
                 className={`${actionButtonClass} text-red-500`}
                 onClick={() => { close(); setShowDeleteConfirm(true) }}
               >
-                🗑 Delete
+                <Trash2 className="w-5 h-5" /> Delete
               </button>
             </div>
           ) : !showDatePicker ? (
@@ -339,7 +353,7 @@ function ReminderActionSheet({
                 className={`${actionButtonClass} text-muted-foreground`}
                 onClick={() => setShowSnoozeOptions(false)}
               >
-                ← Back
+                <ArrowLeft className="w-5 h-5" /> Back
               </button>
             </div>
           ) : (
@@ -351,10 +365,10 @@ function ReminderActionSheet({
                 disabled={(date) => date < new Date()}
               />
               <button
-                className="text-sm text-muted-foreground mt-2"
+                className="text-sm text-muted-foreground mt-2 flex items-center gap-1"
                 onClick={() => setShowDatePicker(false)}
               >
-                ← Back
+                <ArrowLeft className="w-4 h-4" /> Back
               </button>
             </div>
           )}
