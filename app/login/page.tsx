@@ -1,5 +1,5 @@
 import { signIn } from '@/auth'
-import { Boxes } from 'lucide-react'
+import Image from 'next/image'
 
 export default function LoginPage() {
   return (
@@ -13,12 +13,17 @@ export default function LoginPage() {
       <div className="relative w-full max-w-sm space-y-8">
         {/* Logo */}
         <div className="flex flex-col items-center gap-4 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-primary/15 border border-primary/25 flex items-center justify-center shadow-[0_0_32px_hsl(var(--primary)/0.2)]">
-            <Boxes className="w-7 h-7 text-primary" />
-          </div>
+          <Image
+            src="/logo.png"
+            alt="Percurim"
+            width={64}
+            height={64}
+            priority
+            className="rounded-2xl shadow-[0_0_32px_hsl(var(--primary)/0.2)]"
+          />
           <div>
-            <h1 className="font-display text-3xl text-foreground tracking-tight">Boilerplate</h1>
-            <p className="text-sm text-muted-foreground mt-1.5">Sign in to get started</p>
+            <h1 className="font-display text-3xl text-foreground tracking-tight">Percurim</h1>
+            <p className="text-sm text-muted-foreground mt-1.5">Your Personal CRM</p>
           </div>
         </div>
 

@@ -50,7 +50,7 @@ export async function GET(request: Request) {
       const count = dueReminders.length
       await sendPushToUsers(
         [user.id],
-        'Reach — Today',
+        'Percurim',
         `You have ${count} ${count === 1 ? 'person' : 'people'} to reach out to today`,
         '/',
       )

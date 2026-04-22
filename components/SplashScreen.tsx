@@ -40,8 +40,8 @@ export function SplashScreen() {
       }}
     >
       <Image
-        src="/icon-512.png"
-        alt="Boilerplate"
+        src="/logo.png"
+        alt="Percurim"
         width={72}
         height={72}
         priority
@@ -49,10 +49,10 @@ export function SplashScreen() {
       />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px' }}>
         <span style={{ color: '#ffffff', fontSize: '24px', fontWeight: 700, letterSpacing: '-0.5px' }}>
-          Boilerplate
+          Percurim
         </span>
         <span style={{ color: '#64748b', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase' }}>
-          Ready to build
+          Your Personal CRM
         </span>
       </div>
     </div>

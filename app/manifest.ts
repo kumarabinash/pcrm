@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Boilerplate',
-    short_name: 'Boilerplate',
-    description: 'Next.js boilerplate with auth, storage, and notifications',
+    name: 'Percurim',
+    short_name: 'Percurim',
+    description: 'Your Personal CRM — stay in touch with the people who matter',
     start_url: '/',
     display: 'standalone',
     background_color: '#060d1a',

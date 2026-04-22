@@ -14,13 +14,13 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Reach — Personal CRM',
-  description: 'Stay in touch with the people who matter',
+  title: 'Percurim — Your Personal CRM',
+  description: 'Your Personal CRM — stay in touch with the people who matter',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'black-translucent',
-    title: 'Reach',
+    title: 'Percurim',
   },
 }
 
