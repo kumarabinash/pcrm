@@ -48,7 +48,7 @@ export function PeopleList({ contacts, tags }: PeopleListProps) {
   const letters = Object.keys(grouped).sort()
 
   return (
-    <PullToRefreshWrapper onRefresh={() => router.refresh()}>
+    <PullToRefreshWrapper onRefresh={async () => { router.refresh() }}>
       <header
         className="sticky top-0 z-20 bg-background/80 backdrop-blur-xl border-b border-border/50"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}

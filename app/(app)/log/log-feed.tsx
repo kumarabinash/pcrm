@@ -40,7 +40,7 @@ export function LogFeed({ items }: { items: LogItem[] }) {
   const dateKeys = Object.keys(grouped).sort().reverse()
 
   return (
-    <PullToRefreshWrapper onRefresh={() => router.refresh()}>
+    <PullToRefreshWrapper onRefresh={async () => { router.refresh() }}>
       <header className="sticky top-0 z-20 bg-background/80 backdrop-blur-xl border-b border-border/50" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
         <div className="max-w-lg mx-auto px-4 h-14 flex items-center">
           <h1 className="text-[22px] font-bold text-foreground">Log</h1>

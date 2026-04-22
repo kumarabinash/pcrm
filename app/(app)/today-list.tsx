@@ -55,7 +55,7 @@ export function TodayList({ overdue, dueToday, thisWeek }: TodayListProps) {
   const isEmpty = overdue.length === 0 && dueToday.length === 0 && thisWeek.length === 0
 
   return (
-    <PullToRefreshWrapper onRefresh={() => router.refresh()}>
+    <PullToRefreshWrapper onRefresh={async () => { router.refresh() }}>
       <header
         className="sticky top-0 z-20 bg-background/80 backdrop-blur-xl border-b border-border/50"
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
