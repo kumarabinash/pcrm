@@ -7,8 +7,9 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth
   const isLoginPage = req.nextUrl.pathname === '/login'
   const isApiAuth = req.nextUrl.pathname.startsWith('/api/auth')
+  const isApiCron = req.nextUrl.pathname.startsWith('/api/cron')
 
-  if (isApiAuth) return
+  if (isApiAuth || isApiCron) return
 
   if (!isLoggedIn && !isLoginPage) {
     return Response.redirect(new URL('/login', req.nextUrl))

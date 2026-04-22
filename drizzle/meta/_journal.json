@@ -8,6 +8,13 @@
       "when": 1776803091800,
       "tag": "0000_hot_proteus",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1776811022028,
+      "tag": "0001_tiresome_thanos",
+      "breakpoints": true
     }
   ]
 }
